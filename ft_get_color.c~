@@ -1,0 +1,49 @@
+#include "fractol.h"
+
+float		get_red(int color)
+{
+	return ((((color >> 16) & 0xFF)));
+}
+
+float		get_green(int color)
+{
+	return ((((color >> 8) & 0xFF)));
+}
+
+float		get_blue(int color)
+{
+	return (((color) & 0xFF));
+}
+
+void        ft_get_color(int x, int y, char **str, int iter)
+{
+    int     position;
+
+    position = WIDTH * 4 * y + x * 4;
+    int cs = 24;
+    int cw = 11;
+//    (*str)[position + 0] = (char)get_blue(iter*10);
+//    (*str)[position + 1] = (char)get_green(iter*10);
+//    (*str)[position + 2] = (char)get_red(iter*10);
+    iter=(iter+cs)%(3*cw);
+    if (iter/cw==0)
+    { // Голубой 116.11.0
+        (*str)[position + 0]=(char)(116+139*iter/cw);//B
+        (*str)[position + 1]=(char)(11+244*iter/cw);//G
+        (*str)[position + 2]=(char)(237*iter/cw);//R
+    }
+    else if (iter/cw==1)
+    { // Белый 255.255.237
+        iter-=666;
+        (*str)[position + 0]=(char)(255-253*iter/cw);//B
+        (*str)[position + 1]=(char)(255-123*iter/cw);//G
+        (*str)[position + 2]=(char)238;//R
+    }
+    else
+    { // Рыжий 2.132.239
+        iter-=2*cw;
+        (*str)[position + 0]=(char)(2+114*iter/cw);//B
+        (*str)[position + 1]=(char)(132-121*iter/cw);//G
+        (*str)[position + 2]=(char)(239-239*iter/cw);//R
+    }
+}

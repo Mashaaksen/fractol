@@ -1,0 +1,175 @@
+//#include <stdio.h>
+//#include <time.h>
+//#include "fractol.h"
+//
+//void    hook(int keycode, t_win *param)
+//{
+//
+//}
+//
+//double      ft_abs(t_complex z)
+//{
+//	return (z.re * z.re + z.im * z.im);
+//}
+//
+//t_complex   ft_sqr(t_complex z)
+//{
+//	t_complex   new;
+//
+//	new.re = z.re * z.re - z.im * z.im;
+//	new.im = 2 * z.re * z.im;
+//	return (new);
+//}
+//
+//float		get_red(int color)
+//{
+//	return ((((color >> 16) & 0xFF)));
+//}
+//
+//float		get_green(int color)
+//{
+//	return ((((color >> 8) & 0xFF)));
+//}
+//
+//float		get_blue(int color)
+//{
+//	return (((color) & 0xFF));
+//}
+//
+//int        ft_optimization(int y, int x)
+//{
+//	double p;
+//	double a;
+//	double pc;
+//
+//	p = (sqrt(((x - (1/4)) * (x - (1/4))) + (y * y)));
+//	a = atan2(y, (x - (1 / 4)));
+//	pc = (1 / 2) - ((1 / 2) * cos(fabs(a)));
+//	if (p <= pc)
+//		return (1);
+//	return (0);
+//}
+//
+//
+//
+//void        ft_draw_mandelbrot(t_win ptr)
+//{
+//	char	*px;
+//	int		p;
+//	int index = 0;
+//	int i;
+//
+//	px = mlx_get_data_addr(ptr.img, &p, &p, &p);
+//	t_complex z;
+//	time_t rawtime = time(NULL);
+//	char *str = ctime(&rawtime);
+//	write(1, str, ft_strlen(str));
+//
+//	for (int y = 0; y < 800; ++y)
+//	{
+//		for (int x = 0; x < 800; ++x)
+//		{
+//			z.im = 0;
+//			z.re = 0;
+//			i = 0;
+//			if (!ft_optimization(y, x)) {
+//				index++;
+//				while (i < ptr.max_iter && ft_abs(z) < 4) {
+//					z = ft_sqr(z);
+//					z.re = z.re + (1.0 * (x + ptr.move_x - 400) / 200 * ptr.zoom);
+//					z.im = z.im + (1.0 * (y + ptr.move_y - 400) / 200 * ptr.zoom);
+//					++i;
+//				}
+//			}
+//			if (ft_abs(z) >= 4)
+//			{
+//				p = 800 * 4 * y + x * 4;
+//				px[p + 0] = get_red(i*10);
+//				px[p + 1] = get_green(i*10);
+//				px[p + 2] = get_blue(i*10);
+//			}
+//		}
+//	}
+//	rawtime = time(NULL);
+//	str = ctime(&rawtime);
+//	write(1, str, ft_strlen(str));
+//	mlx_put_image_to_window(ptr.mlx, ptr.win, ptr.img, 0, 0);
+//}
+//
+//int     key_hook(int keycode, t_win *param)
+//{
+//	if (keycode == 53 && param)
+//		exit (0);
+//	else if (keycode == 12)
+//	{
+//		char *str;
+//		int p;
+//		str = mlx_get_data_addr(param->img, &p, &p, &p);
+//		ft_bzero(str, 800*800*4);
+//		param->move_x = 0;
+//		param->move_y = 0;
+//		mlx_put_image_to_window(param->mlx, param->win, param->img, 0,0);
+//		param->zoom = 1;
+//		ft_draw_mandelbrot(*param);
+//	}
+//	else if (keycode == 69)
+//	{
+//		char *str;
+//		int p;
+//		str = mlx_get_data_addr(param->img, &p, &p, &p);
+//		ft_bzero(str, 800*800*4);
+//		mlx_put_image_to_window(param->mlx, param->win, param->img, 0,0);
+//		param->max_iter += 500;
+//		ft_draw_mandelbrot(*param);
+//	}
+//	return (0);
+//}
+//
+//int         mouse_hook(int button, int x, int y, t_win *param)
+//{
+//	ft_putendl(ft_itoa_long(x));
+//	ft_putendl(ft_itoa_long(y));
+//	if (button == 5)
+//	{
+//		char *str;
+//		int p;
+//		str = mlx_get_data_addr(param->img, &p, &p, &p);
+//		ft_bzero(str, 800*800*4);
+//		param->move_x = x;
+//		param->move_y = y;
+//		mlx_put_image_to_window(param->mlx, param->win, param->img, 0,0);
+//		param->zoom += 0.05;
+//		ft_draw_mandelbrot(*param);
+//	}
+//	else if (button == 4)
+//	{
+//		char *str;
+//		int p;
+//		str = mlx_get_data_addr(param->img, &p, &p, &p);
+//		ft_bzero(str, 800*800*4);
+//		param->move_x = x;
+//		param->move_y = y;
+//		mlx_put_image_to_window(param->mlx, param->win, param->img, 0,0);
+//		param->zoom -= 0.05;
+//		ft_draw_mandelbrot(*param);
+//	}
+//	return (0);
+//}
+//
+//void        ft_create_window(char *name)
+//{
+//	t_win   ptr;
+//
+//	ptr.mlx = mlx_init(ptr);
+//	ptr.max_iter = 200;
+//	ptr.zoom = 1;
+//	ptr.move_x = 0;
+//	ptr.move_y = 0;
+//	ptr.win = mlx_new_window(ptr.mlx, 800, 800, name);
+//	ptr.img = mlx_new_image(ptr.mlx, 800, 800);
+//	mlx_key_hook(ptr.win, key_hook, (void *)&ptr);
+//	mlx_mouse_hook(ptr.win, mouse_hook, (void *)&ptr);
+//	ft_draw_mandelbrot(ptr);
+//	mlx_loop(ptr.mlx);
+//}
+//
